@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from decouple import config
 from django.contrib.messages import constants as messages
+import dj_database_url
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-xsg5v4f_3ec$@bmk=t*lbho0vjgcn0$yl4q9+pcf^_gu_&i9+*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['192.168.43.80', '127.0.0.1', 'blog-1rzk.onrender.com']
 
@@ -83,12 +84,18 @@ WSGI_APPLICATION = 'blogProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+if not DEBUG:
+    DATABASES = {
+	"default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
+    
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 #mysql database
 #DATABASES = {
