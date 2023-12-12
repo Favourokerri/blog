@@ -158,7 +158,8 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 #media
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "user-uploads"
 
 # Add this line to specify the relative path for CKEditor uploads
 CKEDITOR_UPLOAD_PATH = 'content/ckeditor/'
