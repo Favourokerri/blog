@@ -1,0 +1,167 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <main class="page-wrapper">
+    <!-- Page content -->
+    <section class="container mt-4 mb-lg-5 pt-lg-2 pb-5">
+        <!-- Breadcrumb -->
+        <nav class="pt-lg-4 mt-5 mb-3" aria-label="breadcrumb">
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item">
+              <a href="{% url 'home' %}"><i class="fa-solid fa-house me-1"></i>Home</a>
+            </li>
+          </ol>
+        </nav>
+    <!-- Page title + Layout switcher + Search form -->
+    <div class="row align-items-end gy-3 mb-4 pb-lg-3 pb-1">
+      <div class="col-lg-5 col-md-4">
+        <h1 class="mb-2 mb-md-0">Blog List</h1>
+      </div>
+      <div class="col-lg-7 col-md-8">
+        <div class="row gy-2">
+          <div class="col-lg-5 col-sm-6">
+            <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center me-sm-4 me-3">
+                <a href="blog-list-no-sidebar.html" class="nav-link me-2 p-0 active">
+                  <i class="bx bx-list-ul fs-4"></i>
+                </a>
+                <a href="blog-grid-no-sidebar.html" class="nav-link p-0">
+                  <i class="bx bx-grid-alt fs-4"></i>
+                </a>
+              </div>
+              <form id="categoryForm" action="{% url 'search' %}" method="GET"> {% csrf_token %}
+                <select class="form-select" name="category" onchange="document.getElementById('categoryForm').submit()">
+                    <option value="">select categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category.category }}">{{ category.category }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+            </div>
+          </div>
+          <div class="col-lg-7 col-sm-6">
+            <form id="searchForm" action="{% url 'search' %}" method="GET">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control pe-5 rounded" placeholder="Search the blog...">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bx bx-search"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        </div>
+      </div>
+    </div>
+
+    <!-- Item -->
+    {% if blogPosts %}
+      {% for blogPost in blogPosts %}
+      {% include "messages.html" %}
+      <article class="card border-0 shadow-sm overflow-hidden mb-4">
+        <div class="row g-0">
+          <div class="col-sm-4 position-relative bg-position-center bg-repeat-0 bg-size-cover" style="background-image: url('{{ blogPost.image.url }}'); min-height: 15rem;">
+            <a href="{% url 'singleblogpost' id=blogPost.id %}" class="position-absolute top-0 start-0 w-100 h-100" aria-label="Read more"></a>
+            <p class="btn btn-icon btn-light bg-white border-white btn-sm rounded-circle position-absolute top-0 end-0 zindex-5 me-3 mt-3" data-bs-toggle="tooltip" data-bs-placement="left" title="Read later">
+              <i class="fa-solid fa-book"></i>
+            </p>
+          </div>
+          <div class="col-sm-8 col-md-7">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-3">
+                <a href="#" class="badge fs-sm text-nav bg-secondary text-decoration-none">{{ blogPost.category }}</a>
+                <span class="fs-sm text-muted border-start ps-3 ms-3">{{ blogPost.updated_at }}</span>
+              </div>
+              <h3 class="h4">
+                <a href="{% url 'singleblogpost' id=blogPost.id %}">{{ blogPost.title }}</a>
+              </h3>
+              <p>{{ blogPost.content|truncatechars_html:200|safe }}</p>
+              <hr class="my-4">
+              <div class="d-flex align-items-center justify-content-between">
+                <a href="#" class="d-flex align-items-center fw-bold text-dark text-decoration-none me-3">
+                  <img src="{{ blogPost.author.image.url }}" class="rounded-circle me-3" width="48" alt="Avatar">
+                  {{ blogPost.author.user.username }}
+                </a>
+                <div class="d-flex align-items-center text-muted">
+                  <div class="d-flex align-items-center me-3">
+                    <i class="fa-regular fa-message me-1"></i>
+                    <span class="fs-sm">3</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    {% else %}
+        <h1> No blog Post Yet </h1>
+    {% endif %}
+    <nav aria-label="Page navigation example">
+      <form id="paginationForm" method="get" action="{% url 'home' %}">
+          <ul class="pagination justify-content-center pt-lg-3 pt-1">
+  
+              {% if blogPosts.has_previous %}
+                  <li class="page-item">
+                      <a href="#" class="page-link" onclick="changePage(1)">
+                          &#9664; <!-- Unicode character for left arrow -->
+                      </a>
+                  </li>
+                  <li class="page-item d-none d-sm-block">
+                      <a href="#" class="page-link" onclick="changePage({{ blogPosts.previous_page_number }})">
+                          {{ blogPosts.previous_page_number }}
+                      </a>
+                  </li>
+              {% endif %}
+  
+              <li class="page-item active" aria-current="page">
+                  <span class="page-link">
+                      {{ blogPosts.number }}
+                      <span class="visually-hidden">(current)</span>
+                  </span>
+              </li>
+  
+              {% if blogPosts.has_next %}
+                  <li style="color: green;" class="page-item d-none d-sm-block">
+                      <a href="#" class="page-link" onclick="changePage({{ blogPosts.next_page_number }})">
+                          {{ blogPosts.next_page_number }}
+                      </a>
+                  </li>
+                  <li class="page-item">
+                      <a href="#" class="page-link" onclick="changePage({{ blogPosts.number|add:1 }})">
+                          &#9654; <!-- Unicode character for right arrow -->
+                      </a>
+                  </li>
+              {% endif %}
+  
+              <li class="page-item disabled d-sm-none">
+                  <span class="page-link text-body">{{ blogPosts.number }} / {{ blogPosts.paginator.num_pages }}</span>
+              </li>
+          </ul>
+  
+          <input type="hidden" name="page" id="pageInput" value="{{ blogPosts.number }}">
+      </form>
+  </nav>
+  
+  <script>
+      function changePage(pageNumber) {
+          document.getElementById('pageInput').value = pageNumber;
+          document.getElementById('paginationForm').submit();
+  
+          // Delay the console.log to ensure it executes after form submission
+          setTimeout(function () {
+              console.log(pageNumber);
+          }, 0);
+      }
+  </script>
+  
+  
+  
+  
+  
+  
+    </section>
+
+    </main>
+
+{% endblock %}

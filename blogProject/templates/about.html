@@ -1,0 +1,91 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <main class="page-wrapper">
+    
+         <!-- Hero -->
+      <section class="dark-mode position-relative pt-5" style="background-color: #151922;">
+
+        <!-- Content -->
+        <div class="container position-relative zindex-2 pt-5 pb-2 pb-md-0">
+
+          <!-- Breadcrumb -->
+          <nav class="pt-lg-4" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item">
+                <a href="{% url 'home' %}"><i class="fa-solid fa-house me-1"></i>Home</a>
+              </li>
+            </ol>
+          </nav>
+          
+          <div class="row justify-content-center pt-3 mt-3">
+            <div class="col-xl-6 col-lg-7 col-md-8 col-sm-10 text-center">
+              <h1 class="mb-4">About Us</h1>
+              <p class="fs-lg pb-3 mb-3">{{ about_info.about }}</p>
+              <div class="d-flex justify-content-center">
+                {% if contact_info.facebook_link %}
+                    <a href="{{ contact_info.facebook_link }}" target="_blank" class="btn btn-icon btn-secondary btn-facebook rounded-circle mx-2">
+                        <i class="fa-brands fa-facebook"></i>
+                    </a>
+                {% endif %}
+                {% if contact_info.instagram_link %}
+                    <a href="{{ contact_info.instagram_link }}" target="_blank" class="btn btn-icon btn-secondary btn-instagram rounded-circle mx-2">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                {% endif %}
+                {% if contact_info.twitter_link %}
+                    <a href="{{ contact_info.twitter_link }}" target="_blank" class="btn btn-icon btn-secondary btn-twitter rounded-circle mx-2">
+                        <i class="fa-brands fa-x-twitter"></i>
+                    </a>
+                {% endif %}
+                {% if contact_info.whatsapp_link %}
+                    <a href="{{ contact_info.whatsapp_link }}" target="_blank" class="btn btn-icon btn-secondary btn-twitter rounded-circle mx-2">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom shape -->
+        <div class="d-flex position-absolute top-100 start-0 w-100 overflow-hidden mt-n5" style="color: #151922;">
+          <div class="position-relative start-50 translate-middle-x flex-shrink-0 mt-n5 mt-md-n3 mt-lg-n1" style="width: 3788px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="3788" height="144" viewBox="0 0 3788 144"><path fill="currentColor" d="M0,0h3788.7c-525,90.2-1181.7,143.9-1894.3,143.9S525,90.2,0,0z"/></svg>
+          </div>
+        </div>
+      </section>
+
+       
+         <!-- FAQ (Accordion) -->
+    {% if faqs %}
+      <section class="container">
+        <div class="bg-secondary rounded-3 py-5 px-3 px-sm-4 px-md-0 mt-5">
+          <h2 class="text-center pt-md-1 pt-lg-3 pt-xl-4 pb-4 mt-xl-1 mb-2">Frequently Asked Questions</h2>
+          <div class="row justify-content-center pb-lg-4 pb-xl-5">
+            <div class="col-xl-8 col-lg-9 col-md-10 pb-md-2">
+              <div class="accordion" id="faq">
+
+           <!-- Item -->
+            {% for faq in faqs %}
+            <div class="accordion-item border-0 rounded-3 shadow-sm mb-3">
+                <h3 class="accordion-header">
+                    <button class="accordion-button shadow-none rounded-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q-{{ forloop.counter }}" aria-expanded="false" aria-controls="q-{{ forloop.counter }}">{{ faq.question }}</button>
+                </h3>
+                <div class="accordion-collapse collapse" id="q-{{ forloop.counter }}" data-bs-parent="#faq">
+                    <div class="accordion-body fs-sm pt-0">
+                        <p>{{faq.answer}}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+    </main>
+
+{% endblock %}
