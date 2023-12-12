@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -82,27 +83,27 @@ WSGI_APPLICATION = 'blogProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-#DATABASES = {
- #   'default': {
-  #      'ENGINE': 'django.db.backends.sqlite3',
-   #     'NAME': BASE_DIR / 'db.sqlite3',
-    #}
-#}
-
-#mysql database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'BLOG_APP',
-        'USER': 'okerri',
-        'PASSWORD': config('DATABASE_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+#mysql database
+#DATABASES = {
+ #   'default': {
+  #      'ENGINE': 'django.db.backends.mysql',
+   #     'NAME': 'BLOG_APP',
+    #    'USER': 'okerri',
+     #   'PASSWORD': config('DATABASE_PASSWORD'),
+      #  'HOST': 'localhost',
+       # 'PORT': '',
+        #'OPTIONS': {
+         #   'charset': 'utf8mb4',
+        #},
+    #}
+#}
 
 
 
@@ -146,6 +147,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 #media
 MEDIA_ROOT = BASE_DIR / "media"
 
